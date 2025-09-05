@@ -1,4 +1,5 @@
 import requests
+import time
 import json
 import os
 from dotenv import load_dotenv
@@ -9,13 +10,28 @@ load_dotenv()
 # Получаем токен из переменных окружения
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
-api_url = f'https://api.telegram.org/bot{BOT_TOKEN}/getMe'
+API_URL = 'https://api.telegram.org/bot'
+TEXT = 'KYS'
+MAX_COUNTER = 100
 
-response = requests.get(api_url)  # Отправляем GET-запрос и сохраняем ответ в переменной response
+offset = -2
+counter = 0
+chat_id: int
 
-if response.status_code == 200:  # Если код ответа на запрос - 200, то смотрим, что пришло в ответе
-    data = response.json()
-    pretty_json = json.dumps(data, indent=4, sort_keys=True, ensure_ascii=False)
-    print(pretty_json)
-else:
-    print(response.status_code)  # При другом коде ответа выводим этот код
+while counter < MAX_COUNTER:
+
+    print('attempt =', counter)  #Чтобы видеть в консоли, что код живет
+
+    updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={-1}').json()
+
+    '''pretty_json = json.dumps(updates, indent=4, sort_keys=True, ensure_ascii=False)
+    print(pretty_json)'''
+
+    if updates['result']:
+        for result in updates['result']:
+            offset = result['update_id']
+            chat_id = result['message']['from']['id']
+            requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={TEXT}')
+
+    time.sleep(1)
+    counter += 1
