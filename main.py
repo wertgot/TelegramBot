@@ -2,8 +2,6 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 from aiogram.types import Message
 
-import json
-
 import os
 from dotenv import load_dotenv
 
@@ -43,7 +41,7 @@ async def send_echo(message: Message):
                  'методом send_copy'
         )
 
-# print(json.dumps(message.model_dump(), indent=4))
+# print(message.model_dump_json(indent=4, exclude_none=True))
 
 if __name__ == '__main__':
     dp.run_polling(bot)
