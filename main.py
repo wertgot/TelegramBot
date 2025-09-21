@@ -29,6 +29,13 @@ async def process_help_command(message: Message):
         'я пришлю тебе твое сообщение'
     )
 
+@dp.message(F.voice)
+async def process_sent_voice(message: Message):
+    # Выводим апдейт в терминал
+    print(message.model_dump_json(indent=4, exclude_none=True))
+    # Отправляем сообщение в чат, откуда пришло голосовое
+    await message.answer(text='Вы прислали голосовое сообщение!')
+
 # Этот хэндлер будет срабатывать на любые ваши сообщения,
 # кроме команд "/start" и "/help"
 @dp.message()
