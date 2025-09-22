@@ -16,37 +16,9 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 # Этот хэндлер будет срабатывать на команду "/start"
-@dp.message(Command(commands="start"))
+@dp.message(lambda msg: msg.text and msg.text == "/start")
 async def process_start_command(message: Message):
-    await message.answer('Привет!\nМеня зовут Эхо-бот!\nНапиши мне что-нибудь')
-
-
-# Этот хэндлер будет срабатывать на команду "/help"
-@dp.message(Command(commands="help"))
-async def process_help_command(message: Message):
-    await message.answer(
-        'Напиши мне что-нибудь и в ответ '
-        'я пришлю тебе твое сообщение'
-    )
-
-@dp.message(F.voice)
-async def process_sent_voice(message: Message):
-    # Выводим апдейт в терминал
-    print(message.model_dump_json(indent=4, exclude_none=True))
-    # Отправляем сообщение в чат, откуда пришло голосовое
-    await message.answer(text='Вы прислали голосовое сообщение!')
-
-# Этот хэндлер будет срабатывать на любые ваши сообщения,
-# кроме команд "/start" и "/help"
-@dp.message()
-async def send_echo(message: Message):
-    try:
-        await message.send_copy(chat_id=message.chat.id)
-    except TypeError:
-        await message.reply(
-            text='Данный тип апдейтов не поддерживается '
-                 'методом send_copy'
-        )
+    await message.answer(text='Это команда /start')
 
 # print(message.model_dump_json(indent=4, exclude_none=True))
 
